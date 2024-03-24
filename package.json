@@ -1,0 +1,10 @@
+{
+  "name": "com.rustamkhonoff.uinterface",
+  "version": "1.0.0",
+  "displayName": "UInterface",
+  "description": "Simple UI framework for Unity",
+  "author": {
+    "name": "Shokhrukhkhon Rustamkhonov",
+    "email": "rustamkhonoff@gmail.com"
+  }
+}

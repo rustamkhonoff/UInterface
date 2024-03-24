@@ -1,0 +1,16 @@
+{
+    "name": "UWindows",
+    "rootNamespace": "",
+    "references": [
+        "GUID:79dcdfb69b1bf4482a7f1952e749f51b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
