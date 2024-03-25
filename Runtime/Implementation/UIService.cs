@@ -2,17 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DependencyInjectionService;
-using UI.Interfaces;
-using UI.StaticData;
+using UInterface.Core;
+using UInterface.Interfaces;
+using UInterface.StaticData;
+using UInterface.Window;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace UI.Implementation
+namespace UInterface.Implementation
 {
+    public interface IUIFactory
+    {
+        public T Create<T>(T prefab, Transform parent) where T : UIElement;
+        public T Create<T>(T prefab) where T : UIElement;
+    }
+
+    public class DefaultUIFactory : IUIFactory
+    {
+        public T Create<T>(T prefab, Transform parent) where T : UIElement
+        {
+            return Object.Instantiate(prefab, parent);
+        }
+
+        public T Create<T>(T prefab) where T : UIElement
+        {
+            return Object.Instantiate(prefab);
+        }
+    }
+
     public class UIService : IUIService, IBootable
     {
+        private readonly IUIFactory m_uiFactory;
         public event Action Initialized;
-
-        private readonly IDependencyInjectionService m_dependencyInjectionService;
 
         private readonly List<WindowBase> m_currentCreatedWindows;
 
@@ -25,16 +46,16 @@ namespace UI.Implementation
 
         private UIRoot m_uiRoot;
 
-        public UIService(IDependencyInjectionService dependencyInjectionService) : this(dependencyInjectionService,
+        public UIService(IUIFactory uiFactory) : this(uiFactory,
             new UIServiceConfiguration())
         {
         }
-        
+
         public UIService(
-            IDependencyInjectionService dependencyInjectionService,
+            IUIFactory uiFactory,
             UIServiceConfiguration configuration)
         {
-            m_dependencyInjectionService = dependencyInjectionService;
+            m_uiFactory = uiFactory;
             m_cachedModelWindowsTypes = new Dictionary<Type, WindowBase>();
             m_cachedWindowsTypes = new Dictionary<Type, WindowBase>();
             m_currentCreatedWindows = new List<WindowBase>();
@@ -76,11 +97,11 @@ namespace UI.Implementation
         ///Creates new instance of Window
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
         public void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window
+            where TWindow : Window.Window
         {
             CheckForUIRoot();
 
-            Window prefab = (Window)m_cachedWindowsTypes[typeof(TWindow)];
+            Window.Window prefab = (Window.Window)m_cachedWindowsTypes[typeof(TWindow)];
             if (prefab is null)
                 throw new ArgumentNullException($"There is no Window of type {typeof(TWindow)}");
 
@@ -89,7 +110,7 @@ namespace UI.Implementation
                     return;
 
             TWindow instance =
-                m_dependencyInjectionService.InstantiatePrefabForComponent(prefab, m_uiRoot.RootTransform) as TWindow;
+                m_uiFactory.Create(prefab, m_uiRoot.RootTransform) as TWindow;
 
             if (instance == null)
                 throw new NullReferenceException($"Error while instantiating Window of type {typeof(TWindow)}");
@@ -125,7 +146,7 @@ namespace UI.Implementation
                     return;
 
             ModelWindow<TModel> instance =
-                m_dependencyInjectionService.InstantiatePrefabForComponent(prefab, m_uiRoot.RootTransform);
+                m_uiFactory.Create(prefab, m_uiRoot.RootTransform);
 
             if (instance == null)
                 throw new NullReferenceException($"Error while instantiating ModelWindow for type {model.GetType()}");
@@ -273,7 +294,7 @@ namespace UI.Implementation
         private void CheckForUIRoot()
         {
             if (!m_uiRoot)
-                m_uiRoot = m_dependencyInjectionService.InstantiatePrefabForComponent(m_uiStaticData.RootPrefab);
+                m_uiRoot = m_uiFactory.Create(m_uiStaticData.RootPrefab);
         }
 
         private bool IsModelWindow(Type t, out Type modelType)

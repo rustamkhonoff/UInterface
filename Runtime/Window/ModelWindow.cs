@@ -1,4 +1,4 @@
-namespace UI
+namespace UInterface.Window
 {
     public abstract class ModelWindow<T> : WindowBase
     {

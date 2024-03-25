@@ -3,15 +3,17 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]
 
-namespace UI
+namespace UInterface.Core
 {
-    internal class UIRoot : MonoBehaviour
+    internal class UIRoot : UIElement
     {
+        [SerializeField] private bool _dontDestroyOnLoad;
         [SerializeField] private RectTransform _rootTransform;
 
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            if (_dontDestroyOnLoad)
+                DontDestroyOnLoad(gameObject);
         }
 
         private void Reset()

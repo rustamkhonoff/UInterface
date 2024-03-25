@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using UInterface.Core;
+using UInterface.Window;
 
-namespace UI.Interfaces
+namespace UInterface.Interfaces
 {
     public interface IUIService
     {
         event Action Initialized;
 
         void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window;
+            where TWindow : Window.Window;
 
         void CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
             where TWindow : ModelWindow<TModel>;

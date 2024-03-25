@@ -1,8 +1,8 @@
 using System;
-using UI.Interfaces;
+using UInterface.Interfaces;
 using UnityEngine;
 
-namespace UI
+namespace UInterface.Core
 {
     public abstract class UIElement : MonoBehaviour
     {
