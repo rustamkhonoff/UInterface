@@ -46,15 +46,13 @@ namespace UInterface.Implementation
 
         private UIRoot m_uiRoot;
 
-        public UIService(IUIFactory uiFactory) : this(uiFactory,
-            new UIServiceConfiguration())
-        {
-        }
-
         public UIService(
             IUIFactory uiFactory,
-            UIServiceConfiguration configuration)
+            UIServiceConfiguration configuration = null)
         {
+            if (configuration == null)
+                configuration = new UIServiceConfiguration();
+            
             m_uiFactory = uiFactory;
             m_cachedModelWindowsTypes = new Dictionary<Type, WindowBase>();
             m_cachedWindowsTypes = new Dictionary<Type, WindowBase>();
