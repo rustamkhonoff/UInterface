@@ -19,10 +19,10 @@ namespace UInterface.Extras
             _minAnchor = rectTransform.anchorMin;
             _maxAnchor = rectTransform.anchorMax;
         }
-        public AnchorData(Vector2 max, Vector2 min)
+        public AnchorData(Vector2 min, Vector2 max)
         {
-            _maxAnchor = max;
             _minAnchor = min;
+            _maxAnchor = max;
         }
 
         public Vector2 MinAnchor => _minAnchor;

@@ -17,13 +17,13 @@ namespace UInterface.Extras
         protected override void OnHandleShow(Action showAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, _showDuration, showAction));
+            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, _showDuration, showAction, delay: _showDelay));
         }
 
         protected override void OnHandleHide(Action hideAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, GetCurrentData, ToData, _hideDuration, hideAction));
+            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, GetCurrentData, ToData, _hideDuration, hideAction, delay: _hideDelay));
         }
 
         private void AnimateAnchor(float t, AnchorData from, AnchorData to)

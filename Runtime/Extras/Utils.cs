@@ -6,8 +6,24 @@ using Action = System.Action;
 
 namespace UInterface.Extras
 {
+    public enum AnchorTypes
+    {
+        Full, Left, Top, Right, Bottom
+    }
     public static class Utils
     {
+        public static AnchorData GetAnchorDataFor(this AnchorTypes anchorTypes)
+        {
+            return anchorTypes switch
+            {
+                AnchorTypes.Full => new AnchorData(),
+                AnchorTypes.Left => new AnchorData(new Vector2(-1, 0), new Vector2(0, 1)),
+                AnchorTypes.Right => new AnchorData(new Vector2(1, 0), new Vector2(2, 1)),
+                AnchorTypes.Top => new AnchorData(new Vector2(0, 1), new Vector2(1, 2)),
+                AnchorTypes.Bottom => new AnchorData(new Vector2(0, -1), new Vector2(1, 0)),
+                _ => new AnchorData(),
+            };
+        }
         public static IEnumerator IETween(Action<float> action, float duration = 0.25f, Action callback = null, bool reverse = false,
             Func<float, float> evaluateFunc = null, float delay = 0f)
         {
