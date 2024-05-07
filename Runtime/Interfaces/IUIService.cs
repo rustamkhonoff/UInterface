@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UInterface.Core;
-using UInterface.Window;
+using UInterface.Types;
 
 namespace UInterface.Interfaces
 {
@@ -10,7 +10,7 @@ namespace UInterface.Interfaces
         event Action Initialized;
 
         void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window.Window;
+            where TWindow : Window;
 
         void CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
             where TWindow : ModelWindow<TModel>;

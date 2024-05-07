@@ -5,7 +5,7 @@ using DependencyInjectionService;
 using UInterface.Core;
 using UInterface.Interfaces;
 using UInterface.StaticData;
-using UInterface.Window;
+using UInterface.Types;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -95,11 +95,11 @@ namespace UInterface.Implementation
         ///Creates new instance of Window
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
         public void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window.Window
+            where TWindow : Window
         {
             CheckForUIRoot();
 
-            Window.Window prefab = (Window.Window)m_cachedWindowsTypes[typeof(TWindow)];
+            Window prefab = (Window)m_cachedWindowsTypes[typeof(TWindow)];
             if (prefab is null)
                 throw new ArgumentNullException($"There is no Window of type {typeof(TWindow)}");
 

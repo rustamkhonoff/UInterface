@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UInterface.Core;
-using UInterface.Window;
+using UInterface.Types;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]

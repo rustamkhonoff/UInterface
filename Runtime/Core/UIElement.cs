@@ -6,6 +6,8 @@ namespace UInterface.Core
 {
     public abstract class UIElement : MonoBehaviour
     {
+        public IElementEventHandler ElementEventHandler { get; internal set; } = new DefaultElementEventHandler();
+
         protected IUIService UIService { get; private set; }
 
         internal void SetUIService(IUIService uiService) => UIService = uiService;
@@ -20,10 +22,18 @@ namespace UInterface.Core
         {
         }
 
-        public virtual void Hide(Action onHided = default)
+        public virtual void Hide()
         {
-            gameObject.SetActive(false);
-            onHided?.Invoke();
+            ElementEventHandler.HandleHide(() => gameObject.SetActive(false));
+        }
+
+        public virtual void Hide(Action onHided)
+        {
+            ElementEventHandler.HandleHide(() =>
+            {
+                gameObject.SetActive(false);
+                onHided?.Invoke();
+            });
         }
 
         public void HideAndDestroy()
@@ -33,7 +43,7 @@ namespace UInterface.Core
 
         public virtual void Show()
         {
-            gameObject.SetActive(true);
+            ElementEventHandler.HandleShow(() => gameObject.SetActive(true));
         }
 
         private void OnDestroy()
