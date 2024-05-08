@@ -261,17 +261,21 @@ namespace Implementation
 
         private void DestroyActiveWindows(IList<WindowBase> windows)
         {
-            foreach (WindowBase window in windows)
+            for (int index = windows.Count - 1; index >= 0; index--)
             {
-                window.HideAndDestroy();
+                WindowBase window = windows[index];
+                window.Hide();
                 m_currentCreatedWindows.Remove(window);
             }
         }
 
         public void DestroyAll()
         {
-            foreach (WindowBase window in m_currentCreatedWindows)
-                window.HideAndDestroy();
+            for (int index = m_currentCreatedWindows.Count - 1; index >= 0; index--)
+            {
+                WindowBase window = m_currentCreatedWindows[index];
+                window.Hide();
+            }
 
             m_currentCreatedWindows.Clear();
         }

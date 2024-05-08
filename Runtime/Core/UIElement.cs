@@ -20,7 +20,7 @@ namespace Core
 
         public virtual void Hide()
         {
-            ElementEventHandler.HandleHide(() => gameObject.SetActive(false));
+            ElementEventHandler.HandleHide(DestroySelf);
         }
 
         public void SetEventHandler(IElementEventHandler elementEventHandler)
@@ -35,11 +35,6 @@ namespace Core
                 gameObject.SetActive(false);
                 onHided?.Invoke();
             });
-        }
-
-        public void HideAndDestroy()
-        {
-            Hide(DestroySelf);
         }
 
         public virtual void Show()
