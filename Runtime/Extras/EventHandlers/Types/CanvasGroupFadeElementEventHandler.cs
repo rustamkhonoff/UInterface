@@ -24,7 +24,7 @@ namespace Extras.EventHandlers.Types
 
         protected override void Dispose()
         {
-            StopCoroutine(m_coroutine);
+            if (m_coroutine != null) StopCoroutine(m_coroutine);
         }
 
         protected virtual void SetCanvasFadeValue(float t) => _canvasGroup.alpha = t;
