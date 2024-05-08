@@ -25,7 +25,6 @@ namespace Core
 
         public void SetEventHandler(IElementEventHandler elementEventHandler)
         {
-            Debug.Log($"Set to {elementEventHandler}");
             ElementEventHandler = elementEventHandler;
         }
 
