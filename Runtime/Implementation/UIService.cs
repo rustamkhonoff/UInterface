@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using DependencyInjectionService;
-using UInterface.Core;
-using UInterface.Interfaces;
-using UInterface.StaticData;
-using UInterface.Types;
+using Interfaces;
+using StaticData;
+using Types;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace UInterface.Implementation
+namespace Implementation
 {
     public interface IUIFactory
     {

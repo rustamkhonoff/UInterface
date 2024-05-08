@@ -1,37 +1,34 @@
 using System;
+using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras
+namespace Extras.EventHandlers.Types
 {
     public class CanvasGroupFadeElementEventHandler : ElementEventHandler
     {
         [SerializeField] private CanvasGroup _canvasGroup;
-        [SerializeField] private float _duration = 0.25f;
 
         private Coroutine m_coroutine;
 
         protected override void OnHandleShow(Action showAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, AnimationDuration(), showAction, false, Evaluate, delay: _showDelay));
+            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, ShowData.Duration, showAction, false, Evaluate, delay: ShowData.Delay));
         }
 
         protected override void OnHandleHide(Action hideAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, AnimationDuration(), hideAction, true, Evaluate, delay: _hideDelay));
+            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, HideData.Duration, hideAction, true, Evaluate, delay: HideData.Delay));
         }
 
-        public override void Dispose()
+        protected override void Dispose()
         {
             StopCoroutine(m_coroutine);
         }
 
-        protected override float HideCost => _duration;
-        protected override float ShowCost => _duration;
         protected virtual void SetCanvasFadeValue(float t) => _canvasGroup.alpha = t;
         protected virtual float Evaluate(float t) => t;
-        protected virtual float AnimationDuration() => _duration;
-        private void Reset() => _canvasGroup = GetComponent<CanvasGroup>();
+        protected override void OnReset() => _canvasGroup = GetComponent<CanvasGroup>();
     }
 }

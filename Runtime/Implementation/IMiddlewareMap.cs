@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UInterface.Implementation
+namespace Implementation
 {
     public interface IMiddlewareMap
     {

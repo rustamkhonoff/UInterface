@@ -1,87 +1,80 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras
+namespace Extras.EventHandlers.Types
 {
-    public class CompositeElementEventHandler : ElementEventHandler
+    public class CompositeElementEventHandler : ElementEventHandler, ICompositeElementEventHandler
     {
-        [SerializeField] private List<ElementEventHandler> _elementAnimations = new();
+        [SerializeField] private List<ElementEventHandler> _handlers = new();
+
+        protected override void OnAwake()
+        {
+            _handlers.ForEach(a => a.ShowData.Delay += _showData.Delay);
+            _handlers.ForEach(a => a.HideData.Delay += _hideData.Delay);
+            SetEventHandler(this);
+        }
 
         protected override void OnHandleShow(Action showAction)
         {
             bool Validation(ElementEventHandler a) => a.EventsType is Events.Show or Events.All;
-
-            if (!_elementAnimations.Any(Validation))
-            {
-                showAction?.Invoke();
-            }
-            else
-            {
-                switch (_elementAnimations.Count)
-                {
-                    case 0:
-                        showAction?.Invoke();
-                        break;
-                    case 1:
-                        _elementAnimations[0].HandleShow(showAction);
-                        break;
-                    default:
-                    {
-                        List<ElementEventHandler> ordered = _elementAnimations.OrderByDescending(a => a.RealShowCost).ToList();
-                        foreach (ElementEventHandler item in ordered.Skip(1))
-                            item.HandleShow(null);
-                        ordered[0].HandleShow(showAction);
-                        break;
-                    }
-                }
-            }
+            IterateAndInvokeByCost(
+                Validation,
+                showAction,
+                (handler, action) => handler.HandleShow(action),
+                handler => handler.RealShowCost);
         }
+
 
         protected override void OnHandleHide(Action hideAction)
         {
             bool Validation(ElementEventHandler a) => a.EventsType is Events.Hide or Events.All;
-            if (!_elementAnimations.Any(Validation))
+            IterateAndInvokeByCost(
+                Validation,
+                hideAction,
+                (handler, action) => handler.HandleHide(action),
+                handler => handler.RealHideCost);
+        }
+
+        private void IterateAndInvokeByCost(
+            Func<ElementEventHandler, bool> validation,
+            Action action,
+            Action<ElementEventHandler, Action> handlerAction,
+            Func<ElementEventHandler, float> costFunc)
+        {
+            if (!_handlers.Any(validation))
             {
-                hideAction?.Invoke();
+                action?.Invoke();
             }
             else
             {
-                switch (_elementAnimations.Count)
+                switch (_handlers.Count)
                 {
                     case 0:
-                        hideAction?.Invoke();
+                        action?.Invoke();
                         break;
                     case 1:
-                        _elementAnimations[0].HandleHide(hideAction);
+                        handlerAction?.Invoke(_handlers[0], action);
                         break;
                     default:
                     {
-                        List<ElementEventHandler> ordered = _elementAnimations.OrderByDescending(a => a.RealHideCost).ToList();
+                        List<ElementEventHandler> ordered = _handlers.OrderByDescending(costFunc).ToList();
                         foreach (ElementEventHandler item in ordered.Skip(1))
-                            item.HandleHide(null);
-                        ordered[0].HandleHide(hideAction);
+                            handlerAction?.Invoke(item, null);
+                        handlerAction?.Invoke(ordered[0], action);
                         break;
                     }
                 }
             }
         }
 
-        public override void HandleNewHandlerAdded() => UpdateDatas();
-
-        private void Reset() => UpdateDatas();
-
-        public override void Dispose() => _elementAnimations.ForEach(a => a.SetAutoRegister(true));
-
-        private void UpdateDatas()
+        protected override void OnReset()
         {
-            _elementAnimations.Clear();
-            _elementAnimations.AddRange(GetComponentsInChildren<ElementEventHandler>());
-            _elementAnimations.RemoveAll(a => a == this);
-            _elementAnimations.ForEach(a => a.SetAutoRegister(false));
+            _handlers.Clear();
+            _handlers.AddRange(GetComponents<ElementEventHandler>());
+            _handlers.RemoveAll(a => a == this);
         }
-
-        private void OnValidate() => UpdateDatas();
     }
 }

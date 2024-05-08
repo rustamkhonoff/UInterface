@@ -1,13 +1,12 @@
 using System;
+using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras
+namespace Extras.EventHandlers.Types
 {
     public abstract class RectTransformAnchorElementHandler : ElementEventHandler
     {
         [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private float _showDuration = 0.25f;
-        [SerializeField] private float _hideDuration = 0.25f;
 
         private Coroutine m_coroutine;
         public abstract AnchorData FromData { get; }
@@ -17,13 +16,14 @@ namespace UInterface.Extras
         protected override void OnHandleShow(Action showAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, _showDuration, showAction, delay: _showDelay));
+            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, ShowData.Duration, showAction, delay: ShowData.Delay));
         }
 
         protected override void OnHandleHide(Action hideAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, GetCurrentData, ToData, _hideDuration, hideAction, delay: _hideDelay));
+            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, GetCurrentData, ToData, HideData.Duration, hideAction,
+                delay: HideData.Delay));
         }
 
         private void AnimateAnchor(float t, AnchorData from, AnchorData to)
@@ -34,9 +34,6 @@ namespace UInterface.Extras
 
         private AnchorData GetCurrentData => new(_rectTransform);
 
-        protected override float ShowCost => _showDuration;
-        protected override float HideCost => _hideDuration;
-
-        private void Reset() => _rectTransform = GetComponent<RectTransform>();
+        protected override void OnReset() => _rectTransform = GetComponent<RectTransform>();
     }
 }

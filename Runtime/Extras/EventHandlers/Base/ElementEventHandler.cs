@@ -1,10 +1,30 @@
 using System;
-using UInterface.Core;
+using Core;
 using UnityEngine;
 
-namespace UInterface.Extras
+namespace Extras.EventHandlers.Base
 {
-    [RequireComponent(typeof(UIElement))]
+    [Serializable]
+    public class TimingsData
+    {
+        [SerializeField] private float _delay;
+        [SerializeField] private float _duration;
+
+        public float Duration
+        {
+            get => _duration;
+            set => _duration = value;
+        }
+
+        public float Delay
+        {
+            get => _delay;
+            set => _delay = value;
+        }
+    }
+
+    public interface ICompositeElementEventHandler { }
+
     public abstract class ElementEventHandler : MonoBehaviour, IElementEventHandler
     {
         [Serializable]
@@ -16,32 +36,32 @@ namespace UInterface.Extras
         }
 
         [SerializeField] private Events _eventsType;
-        [SerializeField] private bool _autoRegister = true;
-        [SerializeField] protected float _showDelay, _hideDelay;
+        [SerializeField] protected TimingsData _showData, _hideData;
 
-        private UIElement m_element;
-
-        public float RealShowCost => EventsType is Events.Show or Events.All ? ShowCost + _showDelay : 0f;
-        public float RealHideCost => EventsType is Events.Hide or Events.All ? HideCost + _hideDelay : 0f;
+        public float RealShowCost => EventsType is Events.Show or Events.All ? ShowCost + ShowData.Delay + ShowData.Duration : 0f;
+        public float RealHideCost => EventsType is Events.Hide or Events.All ? HideCost + HideData.Delay + HideData.Duration : 0f;
 
         protected virtual float ShowCost => 0f;
         protected virtual float HideCost => 0f;
 
         public Events EventsType => _eventsType;
 
+        public TimingsData ShowData => _showData;
+
+        public TimingsData HideData => _hideData;
+
         private void Awake()
         {
-            m_element = GetComponent<UIElement>();
-            if (_autoRegister)
-                m_element.ElementEventHandler = this;
+            if (!TryGetComponent<ICompositeElementEventHandler>(out _))
+                SetEventHandler(this);
 
-            Initialize();
+            OnAwake();
         }
 
-
-        private void OnDestroy()
+        protected void SetEventHandler(IElementEventHandler eventHandler)
         {
-            Dispose();
+            if (TryGetComponent(out UIElement element))
+                element.SetEventHandler(eventHandler);
         }
 
         public void HandleShow(Action showAction)
@@ -55,26 +75,12 @@ namespace UInterface.Extras
             if (EventsType is Events.All or Events.Hide)
                 OnHandleHide(hideAction);
         }
-
-        public void SetAutoRegister(bool state) => _autoRegister = state;
+        private void Reset() => OnReset();
+        private void OnDestroy() => Dispose();
         protected abstract void OnHandleShow(Action showAction);
         protected abstract void OnHandleHide(Action hideAction);
-
-        public virtual void HandleNewHandlerAdded()
-        {
-        }
-
-        private void Reset()
-        {
-            BroadcastMessage(nameof(HandleNewHandlerAdded));
-        }
-
-        public virtual void Dispose()
-        {
-        }
-
-        public virtual void Initialize()
-        {
-        }
+        protected virtual void OnReset() { }
+        protected virtual void Dispose() { }
+        protected virtual void OnAwake() { }
     }
 }

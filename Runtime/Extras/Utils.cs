@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Action = System.Action;
 
-namespace UInterface.Extras
+namespace Extras
 {
     public enum AnchorTypes
     {
-        Full, Left, Top, Right, Bottom
+        Full,
+        Left,
+        Top,
+        Right,
+        Bottom
     }
+
     public static class Utils
     {
         public static AnchorData GetAnchorDataFor(this AnchorTypes anchorTypes)
@@ -24,12 +29,17 @@ namespace UInterface.Extras
                 _ => new AnchorData(),
             };
         }
+
         public static IEnumerator IETween(Action<float> action, float duration = 0.25f, Action callback = null, bool reverse = false,
             Func<float, float> evaluateFunc = null, float delay = 0f)
         {
-            yield return new WaitForSeconds(delay);
             evaluateFunc ??= a => a;
             Action<float> fixedAction = reverse ? a => action?.Invoke(1f - a) : action;
+
+            fixedAction?.Invoke(0f);
+
+            yield return new WaitForSeconds(delay);
+
             for (float t = 0; t < 1f; t += Time.deltaTime / duration)
             {
                 fixedAction?.Invoke(evaluateFunc.Invoke(t));
@@ -45,10 +55,13 @@ namespace UInterface.Extras
             bool reverse = false,
             Func<float, float> evaluateFunc = null, float delay = 0f)
         {
-            yield return new WaitForSeconds(delay);
-
             evaluateFunc ??= a => a;
             Action<float, TData, TData> fixedAction = reverse ? (a, b, c) => action?.Invoke(1f - a, b, c) : action;
+
+            fixedAction?.Invoke(0f, from, to);
+            
+            yield return new WaitForSeconds(delay);
+
             for (float t = 0; t < 1f; t += Time.deltaTime / duration)
             {
                 fixedAction?.Invoke(evaluateFunc.Invoke(t), from, to);

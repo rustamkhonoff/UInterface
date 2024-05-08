@@ -1,12 +1,12 @@
 using System;
-using UInterface.Interfaces;
+using Interfaces;
 using UnityEngine;
 
-namespace UInterface.Core
+namespace Core
 {
     public abstract class UIElement : MonoBehaviour
     {
-        public IElementEventHandler ElementEventHandler { get; internal set; } = new DefaultElementEventHandler();
+        public IElementEventHandler ElementEventHandler { get; private set; } = new DefaultElementEventHandler();
 
         protected IUIService UIService { get; private set; }
 
@@ -14,17 +14,19 @@ namespace UInterface.Core
 
         public event Action Destroying;
 
-        public virtual void Initialize()
-        {
-        }
+        public virtual void Initialize() { }
 
-        public virtual void Dispose()
-        {
-        }
+        public virtual void Dispose() { }
 
         public virtual void Hide()
         {
             ElementEventHandler.HandleHide(() => gameObject.SetActive(false));
+        }
+
+        public void SetEventHandler(IElementEventHandler elementEventHandler)
+        {
+            Debug.Log($"Set to {elementEventHandler}");
+            ElementEventHandler = elementEventHandler;
         }
 
         public virtual void Hide(Action onHided)

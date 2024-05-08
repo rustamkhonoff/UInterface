@@ -1,7 +1,8 @@
 using System;
+using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras
+namespace Extras.EventHandlers.Types
 {
     public class AnimationElementEventHandler_Individual : ElementEventHandler
     {
@@ -11,7 +12,7 @@ namespace UInterface.Extras
         private Animation m_animation;
         private float m_showAnimationDuration, m_hideAnimationDuration;
 
-        public override void Initialize()
+        protected override void OnAwake()
         {
             m_showAnimationDuration = _showAnimation.length * _animationSpeed;
             m_hideAnimationDuration = _hideAnimation.length * _animationSpeed;
@@ -32,8 +33,8 @@ namespace UInterface.Extras
             m_animation.clip = _showAnimation;
             m_animation.Play();
             m_animation[_showAnimation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_showAnimation.name].speed = _animationSpeed, _showDelay);
-            this.InvokeDelayed(showAction, m_showAnimationDuration + _showDelay);
+            this.InvokeDelayed(() => m_animation[_showAnimation.name].speed = _animationSpeed, ShowData.Delay);
+            this.InvokeDelayed(showAction, m_showAnimationDuration + ShowData.Delay);
         }
 
         protected override void OnHandleHide(Action hideAction)
@@ -42,8 +43,8 @@ namespace UInterface.Extras
             m_animation.clip = _hideAnimation;
             m_animation.Play();
             m_animation[_hideAnimation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_hideAnimation.name].speed = _animationSpeed, _hideDelay);
-            this.InvokeDelayed(hideAction, m_hideAnimationDuration + _hideDelay);
+            this.InvokeDelayed(() => m_animation[_hideAnimation.name].speed = _animationSpeed, HideData.Delay);
+            this.InvokeDelayed(hideAction, m_hideAnimationDuration + HideData.Delay);
         }
 
         protected override float HideCost => m_hideAnimationDuration;
