@@ -1,4 +1,5 @@
 using System;
+using Extras.EventHandlers.Base;
 using Interfaces;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Core
     public abstract class UIElement : MonoBehaviour
     {
         public IElementEventHandler ElementEventHandler { get; private set; } = new DefaultElementEventHandler();
+        public ElementTimeScale.TimeScaleType TimeScaleType { get; private set; } = ElementTimeScale.TimeScaleType.Scaled;
 
         protected IUIService UIService { get; private set; }
 
@@ -23,10 +25,8 @@ namespace Core
             ElementEventHandler.HandleHide(DestroySelf);
         }
 
-        public void SetEventHandler(IElementEventHandler elementEventHandler)
-        {
-            ElementEventHandler = elementEventHandler;
-        }
+        public void SetEventHandler(IElementEventHandler elementEventHandler) => ElementEventHandler = elementEventHandler;
+        public void SetTimeScale(ElementTimeScale.TimeScaleType timeScaleType) => TimeScaleType = timeScaleType;
 
         public virtual void Hide(Action onHided)
         {

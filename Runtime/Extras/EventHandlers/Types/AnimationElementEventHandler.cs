@@ -31,8 +31,8 @@ namespace Extras.EventHandlers.Types
             StopAllCoroutines();
             m_animation.Play();
             m_animation[_animation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_animation.name].speed = _animationSpeed, ShowData.Delay);
-            this.InvokeDelayed(showAction, m_animationDuration + ShowData.Delay);
+            this.InvokeDelayed(() => m_animation[_animation.name].speed = _animationSpeed, ShowData.Delay, unscaled: IsUnscaled);
+            this.InvokeDelayed(showAction, m_animationDuration + ShowData.Delay, unscaled: IsUnscaled);
         }
 
         protected override void OnHandleHide(Action hideAction)
@@ -41,8 +41,8 @@ namespace Extras.EventHandlers.Types
             m_animation[_animation.name].time = m_animation[_animation.name].length;
             m_animation.Play();
             m_animation[_animation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_animation.name].speed = -_animationSpeed, HideData.Delay);
-            this.InvokeDelayed(hideAction, m_animationDuration + HideData.Delay);
+            this.InvokeDelayed(() => m_animation[_animation.name].speed = -_animationSpeed, HideData.Delay, unscaled: IsUnscaled);
+            this.InvokeDelayed(hideAction, m_animationDuration + HideData.Delay, unscaled: IsUnscaled);
         }
 
         protected override float HideCost => m_animationDuration;

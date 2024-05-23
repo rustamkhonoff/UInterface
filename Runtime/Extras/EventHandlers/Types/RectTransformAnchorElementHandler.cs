@@ -16,14 +16,15 @@ namespace Extras.EventHandlers.Types
         protected override void OnHandleShow(Action showAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, ShowData.Duration, showAction, delay: ShowData.Delay));
+            m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, FromData, DefaultData, ShowData.Duration, showAction, delay: ShowData.Delay,
+                unscaled: IsUnscaled));
         }
 
         protected override void OnHandleHide(Action hideAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
             m_coroutine = StartCoroutine(Utils.IETween(AnimateAnchor, GetCurrentData, ToData, HideData.Duration, hideAction,
-                delay: HideData.Delay));
+                delay: HideData.Delay, unscaled: IsUnscaled));
         }
 
         private void AnimateAnchor(float t, AnchorData from, AnchorData to)

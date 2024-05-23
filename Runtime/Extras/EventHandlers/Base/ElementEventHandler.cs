@@ -37,10 +37,12 @@ namespace Extras.EventHandlers.Base
 
         [SerializeField] private Events _eventsType;
         [SerializeField] protected TimingsData _showData, _hideData;
+        private ElementTimeScale.TimeScaleType m_timeScaleType;
 
         public float RealShowCost => EventsType is Events.Show or Events.All ? ShowCost + ShowData.Delay + ShowData.Duration : 0f;
         public float RealHideCost => EventsType is Events.Hide or Events.All ? HideCost + HideData.Delay + HideData.Duration : 0f;
 
+        protected bool IsUnscaled => m_timeScaleType is ElementTimeScale.TimeScaleType.UnScaled;
         protected virtual float ShowCost => 0f;
         protected virtual float HideCost => 0f;
 
@@ -52,6 +54,7 @@ namespace Extras.EventHandlers.Base
 
         private void Awake()
         {
+            m_timeScaleType = GetComponent<UIElement>().TimeScaleType;
             if (!TryGetComponent<ICompositeElementEventHandler>(out _))
                 SetEventHandler(this);
 
@@ -75,6 +78,7 @@ namespace Extras.EventHandlers.Base
             if (EventsType is Events.All or Events.Hide)
                 OnHandleHide(hideAction);
         }
+
         private void Reset() => OnReset();
         private void OnDestroy() => Dispose();
         protected abstract void OnHandleShow(Action showAction);

@@ -33,8 +33,8 @@ namespace Extras.EventHandlers.Types
             m_animation.clip = _showAnimation;
             m_animation.Play();
             m_animation[_showAnimation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_showAnimation.name].speed = _animationSpeed, ShowData.Delay);
-            this.InvokeDelayed(showAction, m_showAnimationDuration + ShowData.Delay);
+            this.InvokeDelayed(() => m_animation[_showAnimation.name].speed = _animationSpeed, ShowData.Delay, unscaled: IsUnscaled);
+            this.InvokeDelayed(showAction, m_showAnimationDuration + ShowData.Delay, unscaled: IsUnscaled);
         }
 
         protected override void OnHandleHide(Action hideAction)
@@ -43,8 +43,8 @@ namespace Extras.EventHandlers.Types
             m_animation.clip = _hideAnimation;
             m_animation.Play();
             m_animation[_hideAnimation.name].speed = 0f;
-            this.InvokeDelayed(() => m_animation[_hideAnimation.name].speed = _animationSpeed, HideData.Delay);
-            this.InvokeDelayed(hideAction, m_hideAnimationDuration + HideData.Delay);
+            this.InvokeDelayed(() => m_animation[_hideAnimation.name].speed = _animationSpeed, HideData.Delay, unscaled: IsUnscaled);
+            this.InvokeDelayed(hideAction, m_hideAnimationDuration + HideData.Delay, unscaled: IsUnscaled);
         }
 
         protected override float HideCost => m_hideAnimationDuration;

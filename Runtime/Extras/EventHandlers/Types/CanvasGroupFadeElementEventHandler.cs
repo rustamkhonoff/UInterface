@@ -13,13 +13,15 @@ namespace Extras.EventHandlers.Types
         protected override void OnHandleShow(Action showAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, ShowData.Duration, showAction, false, Evaluate, delay: ShowData.Delay));
+            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, ShowData.Duration, showAction, false, Evaluate, delay: ShowData.Delay,
+                unscaled: IsUnscaled));
         }
 
         protected override void OnHandleHide(Action hideAction)
         {
             if (m_coroutine != null) StopCoroutine(m_coroutine);
-            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, HideData.Duration, hideAction, true, Evaluate, delay: HideData.Delay));
+            m_coroutine = StartCoroutine(Utils.IETween(SetCanvasFadeValue, HideData.Duration, hideAction, true, Evaluate, delay: HideData.Delay,
+                unscaled: IsUnscaled));
         }
 
         protected override void Dispose()

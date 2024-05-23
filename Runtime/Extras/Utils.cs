@@ -31,16 +31,20 @@ namespace Extras
         }
 
         public static IEnumerator IETween(Action<float> action, float duration = 0.25f, Action callback = null, bool reverse = false,
-            Func<float, float> evaluateFunc = null, float delay = 0f)
+            Func<float, float> evaluateFunc = null, float delay = 0f, bool unscaled = false)
         {
             evaluateFunc ??= a => a;
             Action<float> fixedAction = reverse ? a => action?.Invoke(1f - a) : action;
 
             fixedAction?.Invoke(0f);
 
-            yield return new WaitForSeconds(delay);
+            if (unscaled)
+                yield return new WaitForSecondsRealtime(delay);
+            else
+                yield return new WaitForSeconds(delay);
 
-            for (float t = 0; t < 1f; t += Time.deltaTime / duration)
+
+            for (float t = 0; t < 1f; t += (unscaled ? Time.unscaledDeltaTime : Time.deltaTime) / duration)
             {
                 fixedAction?.Invoke(evaluateFunc.Invoke(t));
                 yield return null;
@@ -53,16 +57,19 @@ namespace Extras
         public static IEnumerator IETween<TData>(Action<float, TData, TData> action, TData from, TData to, float duration = 0.25f,
             Action callback = null,
             bool reverse = false,
-            Func<float, float> evaluateFunc = null, float delay = 0f)
+            Func<float, float> evaluateFunc = null, float delay = 0f, bool unscaled = false)
         {
             evaluateFunc ??= a => a;
             Action<float, TData, TData> fixedAction = reverse ? (a, b, c) => action?.Invoke(1f - a, b, c) : action;
 
             fixedAction?.Invoke(0f, from, to);
-            
-            yield return new WaitForSeconds(delay);
 
-            for (float t = 0; t < 1f; t += Time.deltaTime / duration)
+            if (unscaled)
+                yield return new WaitForSecondsRealtime(delay);
+            else
+                yield return new WaitForSeconds(delay);
+
+            for (float t = 0; t < 1f; t += (unscaled ? Time.unscaledDeltaTime : Time.deltaTime) / duration)
             {
                 fixedAction?.Invoke(evaluateFunc.Invoke(t), from, to);
                 yield return null;
@@ -78,14 +85,17 @@ namespace Extras
                 action?.Invoke(item);
         }
 
-        public static Coroutine InvokeDelayed(this MonoBehaviour monoBehaviour, Action action, float delay)
+        public static Coroutine InvokeDelayed(this MonoBehaviour monoBehaviour, Action action, float delay, bool unscaled)
         {
-            return monoBehaviour.StartCoroutine(IEInvokeDelayed(action, delay));
+            return monoBehaviour.StartCoroutine(IEInvokeDelayed(action, delay, unscaled));
         }
 
-        public static IEnumerator IEInvokeDelayed(Action action, float delay)
+        public static IEnumerator IEInvokeDelayed(Action action, float delay, bool unscaled = false)
         {
-            yield return new WaitForSeconds(delay);
+            if (unscaled)
+                yield return new WaitForSecondsRealtime(delay);
+            else
+                yield return new WaitForSeconds(delay);
             action?.Invoke();
         }
     }
