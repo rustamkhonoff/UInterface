@@ -1,9 +1,9 @@
 using System;
-using Extras.EventHandlers.Base;
-using Interfaces;
+using UInterface.Extras.EventHandlers;
+using UInterface.Interfaces;
 using UnityEngine;
 
-namespace Core
+namespace UInterface
 {
     public abstract class UIElement : MonoBehaviour
     {
@@ -17,39 +17,40 @@ namespace Core
         public event Action Destroying;
 
         public virtual void Initialize() { }
-
-        public virtual void Dispose() { }
-
-        public virtual void Hide()
-        {
-            ElementEventHandler.HandleHide(DestroySelf);
-        }
+        public void Hide() => Hide(null);
 
         public void SetEventHandler(IElementEventHandler elementEventHandler) => ElementEventHandler = elementEventHandler;
         public void SetTimeScale(ElementTimeScale.TimeScaleType timeScaleType) => TimeScaleType = timeScaleType;
 
-        public virtual void Hide(Action onHided)
+        public void Hide(Action onHided)
         {
-            ElementEventHandler.HandleHide(() =>
-            {
-                gameObject.SetActive(false);
-                onHided?.Invoke();
-            });
+            OnHiding();
+            onHided += OnHided;
+            onHided += DestroySelf;
+            ElementEventHandler.HandleHide(onHided);
         }
 
-        public virtual void Show()
+        public void Show() => Show(null);
+
+        public void Show(Action action)
         {
-            ElementEventHandler.HandleShow(() => gameObject.SetActive(true));
+            OnShowing();
+            action += OnShown;
+            ElementEventHandler.HandleShow(action);
         }
 
-        private void OnDestroy()
+        protected virtual void OnHiding() { }
+        protected virtual void OnHided() { }
+        protected virtual void OnShowing() { }
+        protected virtual void OnShown() { }
+        public virtual void Dispose() { }
+
+        private void OnDisable()
         {
+            Dispose();
             Destroying?.Invoke();
         }
 
-        public void DestroySelf()
-        {
-            Destroy(gameObject);
-        }
+        public void DestroySelf() => Destroy(gameObject);
     }
 }

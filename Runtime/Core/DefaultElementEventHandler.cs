@@ -1,6 +1,6 @@
 using System;
 
-namespace Core
+namespace UInterface
 {
     public class DefaultElementEventHandler : IElementEventHandler
     {

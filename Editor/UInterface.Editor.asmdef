@@ -1,10 +1,12 @@
 {
-    "name": "UInterface",
-    "rootNamespace": "UInterface",
+    "name": "UInterface.Editor",
+    "rootNamespace": "",
     "references": [
-        "GUID:79dcdfb69b1bf4482a7f1952e749f51b"
+        "GUID:1558cf86485f96d47b9c60a6dbbb1645"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

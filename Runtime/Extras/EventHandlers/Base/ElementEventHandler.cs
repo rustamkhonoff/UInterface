@@ -1,14 +1,13 @@
 using System;
-using Core;
 using UnityEngine;
 
-namespace Extras.EventHandlers.Base
+namespace UInterface.Extras.EventHandlers
 {
     [Serializable]
     public class TimingsData
     {
         [SerializeField] private float _delay;
-        [SerializeField] private float _duration;
+        [SerializeField] private float _duration = 0.125f;
 
         public float Duration
         {
@@ -39,8 +38,8 @@ namespace Extras.EventHandlers.Base
         [SerializeField] protected TimingsData _showData, _hideData;
         private ElementTimeScale.TimeScaleType m_timeScaleType;
 
-        public float RealShowCost => EventsType is Events.Show or Events.All ? ShowCost + ShowData.Delay + ShowData.Duration : 0f;
-        public float RealHideCost => EventsType is Events.Hide or Events.All ? HideCost + HideData.Delay + HideData.Duration : 0f;
+        public float TotalShowCost => EventsType is Events.Show or Events.All ? ShowCost + ShowData.Delay + ShowData.Duration : 0f;
+        public float TotalHideCost => EventsType is Events.Hide or Events.All ? HideCost + HideData.Delay + HideData.Duration : 0f;
 
         protected bool IsUnscaled => m_timeScaleType is ElementTimeScale.TimeScaleType.UnScaled;
         protected virtual float ShowCost => 0f;

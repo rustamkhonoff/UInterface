@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace Extras.EventHandlers.Types
+namespace UInterface.Extras.EventHandlers
 {
     public class CompositeElementEventHandler : ElementEventHandler, ICompositeElementEventHandler
     {
@@ -24,7 +23,7 @@ namespace Extras.EventHandlers.Types
                 Validation,
                 showAction,
                 (handler, action) => handler.HandleShow(action),
-                handler => handler.RealShowCost);
+                handler => handler.TotalShowCost);
         }
 
 
@@ -35,7 +34,7 @@ namespace Extras.EventHandlers.Types
                 Validation,
                 hideAction,
                 (handler, action) => handler.HandleHide(action),
-                handler => handler.RealHideCost);
+                handler => handler.TotalHideCost);
         }
 
         private void IterateAndInvokeByCost(

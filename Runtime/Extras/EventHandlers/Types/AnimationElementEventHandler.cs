@@ -1,8 +1,7 @@
 using System;
-using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace Extras.EventHandlers.Types
+namespace UInterface.Extras.EventHandlers
 {
     public class AnimationElementEventHandler : ElementEventHandler
     {

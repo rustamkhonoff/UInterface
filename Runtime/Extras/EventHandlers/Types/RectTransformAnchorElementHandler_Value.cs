@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Extras.EventHandlers.Types
+namespace UInterface.Extras.EventHandlers
 {
     public class RectTransformAnchorElementHandler_Value : RectTransformAnchorElementHandler
     {

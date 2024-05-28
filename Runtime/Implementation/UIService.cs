@@ -1,35 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core;
 using DependencyInjectionService;
-using Interfaces;
-using StaticData;
-using Types;
+using UInterface.Interfaces;
+using UInterface.StaticData;
+using UInterface.Types;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace Implementation
+namespace UInterface.Implementation
 {
-    public interface IUIFactory
-    {
-        public T Create<T>(T prefab, Transform parent) where T : UIElement;
-        public T Create<T>(T prefab) where T : UIElement;
-    }
-
-    public class DefaultUIFactory : IUIFactory
-    {
-        public T Create<T>(T prefab, Transform parent) where T : UIElement
-        {
-            return Object.Instantiate(prefab, parent);
-        }
-
-        public T Create<T>(T prefab) where T : UIElement
-        {
-            return Object.Instantiate(prefab);
-        }
-    }
-
     public class UIService : IUIService, IBootable
     {
         private readonly IUIFactory m_uiFactory;
@@ -288,7 +267,6 @@ namespace Implementation
         {
             if (windowBase == null)
                 return;
-            windowBase.Dispose();
             m_currentCreatedWindows.Remove(windowBase);
             m_currentCreatedWindows.RemoveAll(a => ReferenceEquals(a, null));
         }
