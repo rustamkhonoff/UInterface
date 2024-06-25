@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using DependencyInjectionService;
-using UInterface.Interfaces;
-using UInterface.StaticData;
-using UInterface.Types;
+using Interfaces;
+using StaticData;
+using Types;
 using UnityEngine;
 
-namespace UInterface.Implementation
+namespace Implementation
 {
     public class UIService : IUIService, IBootable
     {

@@ -1,7 +1,8 @@
 using System;
+using Core;
 using UnityEngine;
 
-namespace UInterface.Extras.EventHandlers
+namespace Extras.EventHandlers.Base
 {
     [Serializable]
     public class TimingsData
@@ -24,6 +25,7 @@ namespace UInterface.Extras.EventHandlers
 
     public interface ICompositeElementEventHandler { }
 
+    [DefaultExecutionOrder(-1)]
     public abstract class ElementEventHandler : MonoBehaviour, IElementEventHandler
     {
         [Serializable]

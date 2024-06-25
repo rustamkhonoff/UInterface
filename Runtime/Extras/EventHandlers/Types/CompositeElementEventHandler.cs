@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras.EventHandlers
+namespace Extras.EventHandlers.Types
 {
+    [DefaultExecutionOrder(-1)]
     public class CompositeElementEventHandler : ElementEventHandler, ICompositeElementEventHandler
     {
         [SerializeField] private List<ElementEventHandler> _handlers = new();

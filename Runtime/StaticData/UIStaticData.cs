@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UInterface.Types;
+using Core;
+using Types;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]
 
-namespace UInterface.StaticData
+namespace StaticData
 {
     [CreateAssetMenu(menuName = "Project/UI/Create UIStaticData", fileName = "UIStaticData", order = 0)]
     internal class UIStaticData : ScriptableObject

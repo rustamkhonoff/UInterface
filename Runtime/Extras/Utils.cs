@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Action = System.Action;
 
-namespace UInterface.Extras
+namespace Extras
 {
     public enum AnchorTypes
     {

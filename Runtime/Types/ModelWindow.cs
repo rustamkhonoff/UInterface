@@ -1,4 +1,4 @@
-namespace UInterface.Types
+namespace Types
 {
     public abstract class ModelWindow<T> : WindowBase
     {
