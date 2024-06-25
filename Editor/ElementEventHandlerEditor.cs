@@ -1,4 +1,4 @@
-using UInterface.Extras.EventHandlers.Base;
+using UInterface.Extras.EventHandlers;
 using UnityEditor;
 using UnityEngine;
 

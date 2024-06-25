@@ -1,4 +1,4 @@
-namespace UInterface.Types
+namespace UInterface
 {
     public abstract class Window : WindowBase
     {

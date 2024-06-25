@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UInterface.Core
+namespace UInterface
 {
     internal class SafeArea : MonoBehaviour
     {

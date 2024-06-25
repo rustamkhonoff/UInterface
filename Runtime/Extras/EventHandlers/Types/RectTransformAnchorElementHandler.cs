@@ -1,8 +1,7 @@
 using System;
-using UInterface.Extras.EventHandlers.Base;
 using UnityEngine;
 
-namespace UInterface.Extras.EventHandlers.Types
+namespace UInterface.Extras.EventHandlers
 {
     public abstract class RectTransformAnchorElementHandler : ElementEventHandler
     {
