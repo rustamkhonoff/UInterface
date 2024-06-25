@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UInterface
+namespace UInterface.Core
 {
     public class DefaultUIFactory : IUIFactory
     {

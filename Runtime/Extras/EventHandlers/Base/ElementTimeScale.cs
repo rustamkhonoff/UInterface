@@ -1,6 +1,7 @@
+using UInterface.Core;
 using UnityEngine;
 
-namespace UInterface.Extras.EventHandlers
+namespace UInterface.Extras.EventHandlers.Base
 {
     [DefaultExecutionOrder(-10)] [RequireComponent(typeof(UIElement))]
     public class ElementTimeScale : MonoBehaviour

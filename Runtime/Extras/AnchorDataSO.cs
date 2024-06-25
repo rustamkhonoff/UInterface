@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Extras
+namespace UInterface.Extras
 {
     [CreateAssetMenu(menuName = "Project/UI/ElementEventHandler/Create AnchorData", fileName = "AnchorData", order = 0)]
     public class AnchorDataSO : ScriptableObject

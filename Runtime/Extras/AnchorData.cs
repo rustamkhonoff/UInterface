@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Extras
+namespace UInterface.Extras
 {
     [Serializable]
     public class AnchorData

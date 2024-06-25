@@ -3,7 +3,7 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]
 
-namespace Core
+namespace UInterface.Core
 {
     internal class UIRoot : UIElement
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using Core;
+using UInterface.Core;
 
-namespace Implementation
+namespace UInterface.Implementation
 {
     public class MiddlewareMap : IMiddlewareMap
     {

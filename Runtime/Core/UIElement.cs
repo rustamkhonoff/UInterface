@@ -1,8 +1,9 @@
 using System;
-using Interfaces;
+using UInterface.Extras.EventHandlers.Base;
+using UInterface.Interfaces;
 using UnityEngine;
 
-namespace Core
+namespace UInterface.Core
 {
     public abstract class UIElement : MonoBehaviour
     {

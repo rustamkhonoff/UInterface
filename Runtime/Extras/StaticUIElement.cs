@@ -1,4 +1,4 @@
-using System;
+using UInterface.Core;
 
 namespace UInterface.Extras
 {

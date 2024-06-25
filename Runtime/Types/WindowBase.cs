@@ -1,6 +1,6 @@
-using Core;
+using UInterface.Core;
 
-namespace Types
+namespace UInterface.Types
 {
     public abstract class WindowBase : UIElement
     {

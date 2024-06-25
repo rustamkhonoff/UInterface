@@ -1,8 +1,8 @@
 using System;
-using Core;
+using UInterface.Core;
 using UnityEngine;
 
-namespace Extras.EventHandlers.Base
+namespace UInterface.Extras.EventHandlers.Base
 {
     [Serializable]
     public class TimingsData
