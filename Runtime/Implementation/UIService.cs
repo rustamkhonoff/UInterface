@@ -34,6 +34,7 @@ namespace UInterface
             m_cachedWindowsTypes = new Dictionary<Type, WindowBase>();
             m_currentCreatedWindows = new List<WindowBase>();
             m_createActionHandlers = new Dictionary<Type, Action<UIElement>>();
+            m_closeActionHandlers = new Dictionary<Type, Action<UIElement>>();
 
             m_middlewares = configuration.MiddlewareMap != null
                 ? new Dictionary<Type, Func<bool>>(configuration.MiddlewareMap.Map)
