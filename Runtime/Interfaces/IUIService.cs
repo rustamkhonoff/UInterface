@@ -20,6 +20,8 @@ namespace UInterface.Interfaces
         void RemoveMiddleware<TElement>() where TElement : UIElement;
         void AddCreateAction<TElement>(Action<UIElement> action) where TElement : UIElement;
         void RemoveCreateAction<TElement>(Action<UIElement> action) where TElement : UIElement;
+        void AddCloseAction<TElement>(Action<UIElement> action) where TElement : UIElement;
+        void RemoveCloseAction<TElement>(Action<UIElement> action) where TElement : UIElement;
         IList<WindowBase> GetActiveWindowsOfType<TWindow>() where TWindow : WindowBase;
         IList<WindowBase> GetActiveWindowsForModel<TModel>();
         bool TryGetActiveWindowsOfType<TWindow>(out IList<WindowBase> instances) where TWindow : WindowBase;

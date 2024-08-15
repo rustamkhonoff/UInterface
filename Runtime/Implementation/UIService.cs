@@ -19,7 +19,7 @@ namespace UInterface.Implementation
         private readonly Dictionary<Type, WindowBase> m_cachedModelWindowsTypes;
         private readonly Dictionary<Type, WindowBase> m_cachedWindowsTypes;
         private readonly Dictionary<Type, Func<bool>> m_middlewares;
-        private readonly Dictionary<Type, Action<UIElement>> m_actionHandlers;
+        private readonly Dictionary<Type, Action<UIElement>> m_createActionHandlers, m_closeActionHandlers;
 
         private readonly UIStaticData m_uiStaticData;
 
@@ -31,12 +31,12 @@ namespace UInterface.Implementation
         {
             if (configuration == null)
                 configuration = new UIServiceConfiguration();
-            
+
             m_uiFactory = uiFactory;
             m_cachedModelWindowsTypes = new Dictionary<Type, WindowBase>();
             m_cachedWindowsTypes = new Dictionary<Type, WindowBase>();
             m_currentCreatedWindows = new List<WindowBase>();
-            m_actionHandlers = new Dictionary<Type, Action<UIElement>>();
+            m_createActionHandlers = new Dictionary<Type, Action<UIElement>>();
 
             m_middlewares = configuration.MiddlewareMap != null
                 ? new Dictionary<Type, Func<bool>>(configuration.MiddlewareMap.Map)
@@ -100,7 +100,7 @@ namespace UInterface.Implementation
             if (onlyOneInstance && TryGetActiveWindowsOfType<TWindow>(out IList<WindowBase> foundInstances))
                 DestroyActiveWindows(foundInstances);
 
-            if (m_actionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> elementEvent))
+            if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> elementEvent))
                 elementEvent?.Invoke(instance);
 
             m_currentCreatedWindows.Add(instance);
@@ -132,13 +132,18 @@ namespace UInterface.Implementation
             instance.SetModel(model);
             instance.Initialize();
             instance.Show();
+            instance.Destroying += () =>
+            {
+                if (m_closeActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> closeElementEvent))
+                    closeElementEvent?.Invoke(instance);
+            };
             instance.Destroying += () => RemoveFromActive(instance);
 
             if (onlyOneInstance && TryGetActiveWindowsOfType<ModelWindow<TModel>>(out IList<WindowBase> foundInstances))
                 DestroyActiveWindows(foundInstances);
 
-            if (m_actionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> elementEvent))
-                elementEvent?.Invoke(instance);
+            if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> openElementEvent))
+                openElementEvent?.Invoke(instance);
 
             m_currentCreatedWindows.Add(instance);
         }
@@ -172,21 +177,41 @@ namespace UInterface.Implementation
 
         public void AddCreateAction<TElement>(Action<UIElement> action) where TElement : UIElement
         {
-            if (m_actionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
+            if (m_createActionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
             {
-                m_actionHandlers[typeof(TElement)] = cachedElementEvent + action;
+                m_createActionHandlers[typeof(TElement)] = cachedElementEvent + action;
             }
             else
             {
-                m_actionHandlers.Add(typeof(TElement), action);
+                m_createActionHandlers.Add(typeof(TElement), action);
             }
         }
 
         public void RemoveCreateAction<TElement>(Action<UIElement> action) where TElement : UIElement
         {
-            if (m_actionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
+            if (m_createActionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
             {
-                m_actionHandlers[typeof(TElement)] = cachedElementEvent - action;
+                m_createActionHandlers[typeof(TElement)] = cachedElementEvent - action;
+            }
+        }
+
+        public void AddCloseAction<TElement>(Action<UIElement> action) where TElement : UIElement
+        {
+            if (m_closeActionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
+            {
+                m_closeActionHandlers[typeof(TElement)] = cachedElementEvent + action;
+            }
+            else
+            {
+                m_closeActionHandlers.Add(typeof(TElement), action);
+            }
+        }
+
+        public void RemoveCloseAction<TElement>(Action<UIElement> action) where TElement : UIElement
+        {
+            if (m_closeActionHandlers.TryGetValue(typeof(TElement), out Action<UIElement> cachedElementEvent))
+            {
+                m_closeActionHandlers[typeof(TElement)] = cachedElementEvent - action;
             }
         }
 
@@ -207,7 +232,7 @@ namespace UInterface.Implementation
 
         public void CloseAllWindows()
         {
-            throw new NotImplementedException();
+            m_currentCreatedWindows.ForEach(a => a.Hide());
         }
 
         public bool IsWindowActive<TWindow>() where TWindow : WindowBase
@@ -267,6 +292,7 @@ namespace UInterface.Implementation
         {
             if (windowBase == null)
                 return;
+
             m_currentCreatedWindows.Remove(windowBase);
             m_currentCreatedWindows.RemoveAll(a => ReferenceEquals(a, null));
         }
