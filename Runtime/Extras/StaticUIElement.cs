@@ -1,5 +1,3 @@
-using System;
-
 namespace UInterface.Extras
 {
     public class StaticUIElement : UIElement

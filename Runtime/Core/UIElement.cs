@@ -1,6 +1,5 @@
 using System;
 using UInterface.Extras.EventHandlers;
-using UInterface.Interfaces;
 using UnityEngine;
 
 namespace UInterface

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace UInterface.Extras.EventHandlers
 {
+    [DefaultExecutionOrder(-1)]
     public class CompositeElementEventHandler : ElementEventHandler, ICompositeElementEventHandler
     {
         [SerializeField] private List<ElementEventHandler> _handlers = new();

@@ -1,4 +1,4 @@
-namespace UInterface.Implementation
+namespace UInterface
 {
     public class UIServiceConfiguration
     {

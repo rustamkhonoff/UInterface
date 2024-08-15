@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UInterface.Types;
 
-namespace UInterface.Interfaces
+namespace UInterface
 {
     public interface IUIService
     {

@@ -24,6 +24,7 @@ namespace UInterface.Extras.EventHandlers
 
     public interface ICompositeElementEventHandler { }
 
+    [DefaultExecutionOrder(-1)]
     public abstract class ElementEventHandler : MonoBehaviour, IElementEventHandler
     {
         [Serializable]
