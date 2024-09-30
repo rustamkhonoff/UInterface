@@ -98,10 +98,10 @@ namespace UInterface
             if (onlyOneInstance && TryGetActiveWindowsOfType<TWindow>(out IList<WindowBase> foundInstances))
                 DestroyActiveWindows(foundInstances);
 
+            m_currentCreatedWindows.Add(instance);
+            
             if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> elementEvent))
                 elementEvent?.Invoke(instance);
-
-            m_currentCreatedWindows.Add(instance);
         }
 
 
@@ -140,10 +140,10 @@ namespace UInterface
             if (onlyOneInstance && TryGetActiveWindowsOfType<ModelWindow<TModel>>(out IList<WindowBase> foundInstances))
                 DestroyActiveWindows(foundInstances);
 
+            m_currentCreatedWindows.Add(instance);
+
             if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> openElementEvent))
                 openElementEvent?.Invoke(instance);
-
-            m_currentCreatedWindows.Add(instance);
         }
 
         ///Creates new instance of Model Window
