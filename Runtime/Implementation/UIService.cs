@@ -71,7 +71,7 @@ namespace UInterface
 
         ///Creates new instance of Window
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
-        public void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
+        public TWindow CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
             where TWindow : Window
         {
             CheckForUIRoot();
@@ -80,9 +80,11 @@ namespace UInterface
             if (prefab is null)
                 throw new ArgumentNullException($"There is no Window of type {typeof(TWindow)}");
 
-            if (m_middlewares.TryGetValue(typeof(TWindow), out Func<bool> condition))
-                if (!condition())
-                    return;
+            if (m_middlewares.TryGetValue(typeof(TWindow), out Func<bool> condition) && !condition())
+            {
+                Debug.LogWarning($"Can't create window of type {typeof(TWindow)}, blocked by middleware");
+                return null;
+            }
 
             TWindow instance =
                 m_uiFactory.Create(prefab, m_uiRoot.RootTransform) as TWindow;
@@ -99,16 +101,18 @@ namespace UInterface
                 DestroyActiveWindows(foundInstances);
 
             m_currentCreatedWindows.Add(instance);
-            
+
             if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> elementEvent))
                 elementEvent?.Invoke(instance);
+
+            return instance;
         }
 
 
         ///Creates new instance of Model Window
         /// <param name="model">Required model type for window</param>
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
-        public void CreateWindowForModel<TModel>(TModel model, bool onlyOneInstance = true)
+        public ModelWindow<TModel> CreateWindowForModel<TModel>(TModel model, bool onlyOneInstance = true)
         {
             CheckForUIRoot();
 
@@ -116,9 +120,11 @@ namespace UInterface
             if (prefab is null)
                 throw new ArgumentNullException($"There is no Window for Model with type {model.GetType()}");
 
-            if (m_middlewares.TryGetValue(prefab.GetType(), out Func<bool> condition))
-                if (!condition())
-                    return;
+            if (m_middlewares.TryGetValue(prefab.GetType(), out Func<bool> condition) && !condition())
+            {
+                Debug.LogWarning($"Can't create window for model type {typeof(TModel)}, blocked by middleware");
+                return null;
+            }
 
             ModelWindow<TModel> instance =
                 m_uiFactory.Create(prefab, m_uiRoot.RootTransform);
@@ -144,15 +150,17 @@ namespace UInterface
 
             if (m_createActionHandlers.TryGetValue(prefab.GetType(), out Action<UIElement> openElementEvent))
                 openElementEvent?.Invoke(instance);
+
+            return instance;
         }
 
         ///Creates new instance of Model Window
         /// <param name="model">Required model type for window</param>
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
-        public void CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
+        public TWindow CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
             where TWindow : ModelWindow<TModel>
         {
-            CreateWindowForModel(model, onlyOneInstance);
+            return (TWindow)CreateWindowForModel(model, onlyOneInstance);
         }
 
         #endregion

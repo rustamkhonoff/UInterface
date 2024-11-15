@@ -7,13 +7,13 @@ namespace UInterface
     {
         event Action Initialized;
 
-        void CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
+        TWindow CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
             where TWindow : Window;
 
-        void CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
+        TWindow CreateWindowOfTypeForModel<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
             where TWindow : ModelWindow<TModel>;
 
-        void CreateWindowForModel<TModel>(TModel model, bool onlyOneInstance = true);
+        ModelWindow<TModel> CreateWindowForModel<TModel>(TModel model, bool onlyOneInstance = true);
 
         void AddMiddleware<TElement>(Func<bool> condition) where TElement : UIElement;
         void RemoveMiddleware<TElement>() where TElement : UIElement;
